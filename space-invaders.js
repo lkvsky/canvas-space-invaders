@@ -5,7 +5,7 @@ var SI = (function() {
 
     self.x = pos.x;
     self.y = pos.y;
-    self.gunPoint = { x: self.x + 20, y: self.y };
+    self.gunPoint = { x: self.x + Ship.GUNPOINT_OFFSET, y: self.y };
     self.firedBullets = [];
 
     self.fire = function() {
@@ -24,7 +24,7 @@ var SI = (function() {
       ctx.beginPath();
       ctx.fillStyle = "#800080";
 
-      ctx.rect(self.x, self.y, 40, 20);
+      ctx.rect(self.x, self.y, Ship.WIDTH, Ship.HEIGHT);
       ctx.fill();
     };
 
@@ -45,17 +45,16 @@ var SI = (function() {
     };
 
     self.update = function(val) {
-      if (self.blocked()) {
-        self.x = DIM.x;
-        self.gunPoint.x = DIM.x + 20;
-      } else {
+      if (!self.blocked(val)){
         self.x += val;
         self.gunPoint.x += val;
       }
     };
 
-    self.blocked = function() {
-      if ((self.x > DIM.x) || (self.x - 40 < 0)) {
+    self.blocked = function(val) {
+      var temp = self.x + val;
+
+      if (((temp + 40) >= DIM.width) || (temp <= 0)) {
         return true;
       }
 
@@ -64,11 +63,11 @@ var SI = (function() {
 
     self.keyBindings = function() {
       key("left", function() {
-        self.update(-30);
+        self.update(-10);
       });
 
       key("right", function() {
-        self.update(30);
+        self.update(10);
       });
 
       key("space", function() {
@@ -77,9 +76,9 @@ var SI = (function() {
     };
   }
 
-  Ship.GUNPOINT
-  Ship.WIDTH
-  Ship.HEIGHT
+  Ship.WIDTH = 40;
+  Ship.HEIGHT = 20;
+  Ship.GUNPOINT_OFFSET = 20;
 
   // Bullet class
   // bullet has direction
