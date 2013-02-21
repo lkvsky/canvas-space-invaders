@@ -3,14 +3,17 @@ canvas {
   display: block;
   margin-right:auto;
   margin-left: auto;
+  background-image: url('sunset.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
 
-background: #feffff; /* Old browsers */
-background: -moz-linear-gradient(top,  #feffff 0%, #ddf1f9 12%, #9ec0ed 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#feffff), color-stop(12%,#ddf1f9), color-stop(100%,#9ec0ed)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%); /* IE10+ */
-background: linear-gradient(to bottom,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#9ec0ed',GradientType=0 ); /* IE6-9 */
+/*
+background: -moz-linear-gradient(top,  #feffff 0%, #ddf1f9 12%, #9ec0ed 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#feffff), color-stop(12%,#ddf1f9), color-stop(100%,#9ec0ed));
+background: -webkit-linear-gradient(top,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%);
+background: -o-linear-gradient(top,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%);
+background: -ms-linear-gradient(top,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%);
+background: linear-gradient(to bottom,  #feffff 0%,#ddf1f9 12%,#9ec0ed 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#9ec0ed',GradientType=0 );*/
 
 }

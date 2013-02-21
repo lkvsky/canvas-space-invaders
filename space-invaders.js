@@ -109,12 +109,76 @@ var SI = (function() {
     };
   }
 
+  function Alien(ctx, pos) {
+    var self = this;
+
+    self.x = pos.x;
+    self.y = pos.y;
+    self.speed = 2;
+    self.firedBullets = [];
+
+    self.draw = function() {
+      ctx.beginPath();
+      ctx.fillStyle = "#e6c200";
+      ctx.stroke
+
+      ctx.rect(self.x, self.y, Ship.WIDTH, Ship.HEIGHT);
+      ctx.fill();
+    }
+
+    self.update = function(direction) {
+      self.x += direction * self.speed;
+    }
+
+    self.isHit = function() {
+
+    }
+
+    self.fire = function() {
+    }
+
+  }
+
+  Alien.buildAlienRow = function(ctx, firstPos) {
+    var alienRow = [];
+
+    var firstPosx = firstPos.x;
+    var firstPosy = firstPos.y;
+
+    for(var i = 1; i<=10; i++) {
+      var pos = {
+        x: (firstPosx * i),
+        y: (firstPosy)
+      }
+
+      var a = new Alien(ctx, pos);
+      alienRow.push(a);
+    }
+
+    return alienRow;
+  };
+
+  Alien.wallHit = function(aliens) {
+    var firstAlien = aliens[0];
+    var lastAlien = aliens[aliens.length - 1];
+
+    if ((lastAlien.x + Ship.WIDTH) >= Game.DIM.width) {
+      return true;
+    } else if (firstAlien.x <= 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   function Game(ctx) {
     var self = this;
 
     self.ship = new Ship(ctx, Ship.STARTING_POS);
     // Will need to add alien bullets here, too
     self.firedBullets = self.ship.firedBullets;
+    self.aliens = Alien.buildAlienRow(ctx, { x:60, y:60 });
+    self.alienDirection = 1;
 
     self.start = function() {
       self.ship.keyBindings();
@@ -129,6 +193,11 @@ var SI = (function() {
 
     self.draw = function() {
       self.ship.draw();
+
+      for (var i = 0; i < self.aliens.length; i++) {
+        var a = self.aliens[i];
+        a.draw();
+      }
 
       for (var i = 0; i < self.firedBullets.length; i++) {
         var b = self.firedBullets[i];
@@ -145,18 +214,26 @@ var SI = (function() {
           self.firedBullets.splice(i, 1);
         }
       }
+
+      if (Alien.wallHit(self.aliens)) {
+        self.alienDirection *= -1
+
+        for (var i = 0; i<self.aliens.length; i++){
+          var a = self.aliens[i];
+          a.y += 20;
+        }
+      }
+
+      for (var i = 0; i < self.aliens.length; i++) {
+        var a = self.aliens[i];
+        a.update(self.alienDirection);
+      }
     };
 
   }
 
   Game.DIM = { width: 900, height: 600 }
   Ship.STARTING_POS = { x: (Game.DIM.width/2 - 20), y: Game.DIM.height -50 }
-
-  // Alien class
-  // alien#fire
-  // alien#isHit
-  // alien#draw
-  // alien#update
 
   // Game class
   // moves aliens from left to right
@@ -170,7 +247,7 @@ var SI = (function() {
   return {
     Ship: Ship,
     Bullet: Bullet,
-    //Alien: Alien,
+    Alien: Alien,
     Game: Game
   }
 
