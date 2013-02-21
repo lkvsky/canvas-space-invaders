@@ -80,10 +80,70 @@ var SI = (function() {
   Ship.HEIGHT = 20;
   Ship.GUNPOINT_OFFSET = 20;
 
-  // Bullet class
-  // bullet has direction
-  // bullet#draw
-  // bullet#update
+
+  function Bullet(ctx, pos, vehicle) {
+    var self = this;
+
+    self.x = pos.x;
+    self.y = pos.y;
+
+    self.speed = 2;
+    self.vehicles = {
+      "ship": -4,
+      "alien": 2
+    };
+    self.velocity = self.vehicles[vehicle];
+
+    self.draw = function() {
+      ctx.beginPath();
+      ctx.fillStyle = "#ff0000";
+
+      ctx.rect(self.x, self.y, 5, 10);
+      ctx.fill();
+    };
+
+    self.update = function() {
+      self.y += (self.velocity * self.speed);
+    };
+  }
+
+  function Game(ctx, DIM) {
+    var self = this;
+
+    self.ship = new Ship(ctx, { x: (DIM.width/2 - 20), y: DIM.height -50 }, DIM);
+    // Will need to add alien bullets here, too
+    self.firedBullets = self.ship.firedBullets;
+
+    self.start = function() {
+      self.ship.keyBindings();
+      setInterval(self.gameLoop, 1000/24)
+    };
+
+    self.gameLoop = function() {
+      self.update();
+      self.draw();
+    };
+
+    self.draw = function() {
+      self.ship.draw();
+
+      for (var i = 0; i < self.firedBullets.length; i++) {
+        var b = self.firedBullets[i];
+        b.draw();
+      }
+    };
+
+    self.update = function() {
+      // check if blocked
+      self.ship.update();
+
+      for (var i = 0; i < self.firedBullets.length; i++) {
+        var b = self.firedBullets[i];
+        b.update();
+      }
+    };
+
+  }
 
   // Alien class
   // alien#fire
@@ -102,9 +162,9 @@ var SI = (function() {
 
   return {
     Ship: Ship,
-    //Bullet: Bullet,
+    Bullet: Bullet,
     //Alien: Alien,
-    //Game: Game
+    Game: Game
   }
 
 })();
@@ -117,11 +177,13 @@ var SI = (function() {
   canvas.height = DIM.height;
 
   var ctx = canvas.getContext("2d");
-  var shipStartPos = { x: (DIM.width/2 - 20), y: DIM.height -50 }
+  // var shipStartPos = { x: (DIM.width/2 - 20), y: DIM.height -50 }
+  var game = new SI.Game(ctx, DIM)
+  game.start();
 
-  var ship = new SI.Ship(ctx, shipStartPos, DIM);
-  ship.keyBindings();
-  ship.draw();
+  // var ship = new SI.Ship(ctx, shipStartPos, DIM);
+  // ship.keyBindings();
+  // ship.draw();
 
-  setInterval(ship.draw, 1000/24);
+  // setInterval(ship.draw, 1000/24);
 })();
