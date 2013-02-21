@@ -14,7 +14,6 @@ var SI = (function() {
     };
 
     self.draw = function() {
-      ctx.clearRect(0, 0, 900, 600);
       self.drawBackground();
       self.drawShip();
       self.drawGun();
@@ -120,6 +119,7 @@ var SI = (function() {
     };
 
     self.gameLoop = function() {
+      ctx.clearRect(0, 0, 900, 600);
       self.update();
       self.draw();
     };
@@ -135,7 +135,6 @@ var SI = (function() {
 
     self.update = function() {
       // check if blocked
-      self.ship.update();
 
       for (var i = 0; i < self.firedBullets.length; i++) {
         var b = self.firedBullets[i];
