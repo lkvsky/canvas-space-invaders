@@ -1,6 +1,6 @@
 var SI = (function() {
 
-  function Ship(ctx, pos, DIM) {
+  function Ship(ctx, pos) {
     var self = this;
 
     self.x = pos.x;
@@ -40,7 +40,7 @@ var SI = (function() {
       ctx.beginPath();
       ctx.fillStyle = "#c0ed9e";
 
-      ctx.rect(0, DIM.height-30, DIM.width, 30);
+      ctx.rect(0, Game.DIM.height-30, Game.DIM.width, 30);
       ctx.fill();
     };
 
@@ -54,7 +54,7 @@ var SI = (function() {
     self.blocked = function(val) {
       var temp = self.x + val;
 
-      if (((temp + 40) >= DIM.width) || (temp <= 0)) {
+      if (((temp + 40) >= Game.DIM.width) || (temp <= 0)) {
         return true;
       }
 
@@ -107,10 +107,10 @@ var SI = (function() {
     };
   }
 
-  function Game(ctx, DIM) {
+  function Game(ctx) {
     var self = this;
 
-    self.ship = new Ship(ctx, { x: (DIM.width/2 - 20), y: DIM.height -50 }, DIM);
+    self.ship = new Ship(ctx, Ship.STARTING_POS);
     // Will need to add alien bullets here, too
     self.firedBullets = self.ship.firedBullets;
 
@@ -145,6 +145,9 @@ var SI = (function() {
 
   }
 
+  Game.DIM = { width: 900, height: 600 }
+  Ship.STARTING_POS = { x: (Game.DIM.width/2 - 20), y: Game.DIM.height -50 }
+
   // Alien class
   // alien#fire
   // alien#isHit
@@ -171,14 +174,13 @@ var SI = (function() {
 
 
 (function() {
-  var canvas = $("canvas")[0]
-  var DIM = { width: 900, height: 600 }
-  canvas.width = DIM.width;
-  canvas.height = DIM.height;
+  var canvas = $("canvas")[0];
+  canvas.width = 900;
+  canvas.height = 600;
 
   var ctx = canvas.getContext("2d");
   // var shipStartPos = { x: (DIM.width/2 - 20), y: DIM.height -50 }
-  var game = new SI.Game(ctx, DIM)
+  var game = new SI.Game(ctx)
   game.start();
 
   // var ship = new SI.Ship(ctx, shipStartPos, DIM);
