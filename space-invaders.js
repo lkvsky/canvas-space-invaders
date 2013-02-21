@@ -10,7 +10,10 @@ var SI = (function() {
 
     self.fire = function() {
       var bullet = new Bullet(ctx, self.gunPoint, "ship");
-      self.firedBullets.push(bullet);
+
+      if (self.firedBullets.length < 7) {
+        self.firedBullets.push(bullet);
+      }
     };
 
     self.draw = function() {
@@ -62,11 +65,11 @@ var SI = (function() {
 
     self.keyBindings = function() {
       key("left", function() {
-        self.update(-10);
+        self.update(-30);
       });
 
       key("right", function() {
-        self.update(10);
+        self.update(30);
       });
 
       key("space", function() {
@@ -134,11 +137,13 @@ var SI = (function() {
     };
 
     self.update = function() {
-      // check if blocked
-
       for (var i = 0; i < self.firedBullets.length; i++) {
         var b = self.firedBullets[i];
         b.update();
+
+        if (b.y < 0) {
+          self.firedBullets.splice(i, 1);
+        }
       }
     };
 
