@@ -132,18 +132,15 @@ var SI = (function() {
 
     self.isHit = function(bullets) {
       for (var i = 0; i < bullets.length; i++) {
-        var bullet = bullets[i];
-
-        var deltX = Math.pow(bullet.x - (self.x + (Ship.WIDTH/2)), 2);
-        var deltY = Math.pow(bullet.y - (self.y + Ship.HEIGHT), 2);
-
-        d = Math.sqrt(deltX + deltY);
-
-        if (d < (Ship.HEIGHT)) {
-          bullets.splice(bullets.indexOf(bullet), 1);
+        if (bullets[i].y <= (self.y + Ship.HEIGHT)
+            && (bullets[i])
+            && (bullets[i].x ) >= self.x
+            && bullets[i].x <= (self.x + Ship.WIDTH)) {
           return true;
         }
-      }
+
+        return false;
+      };
     };
 
     self.fire = function() {
