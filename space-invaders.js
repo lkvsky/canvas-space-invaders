@@ -114,7 +114,7 @@ var SI = (function() {
 
     self.x = pos.x;
     self.y = pos.y;
-    self.speed = 2;
+    self.speed = 1;
     self.firedBullets = [];
 
     self.draw = function() {
@@ -124,18 +124,31 @@ var SI = (function() {
 
       ctx.rect(self.x, self.y, Ship.WIDTH, Ship.HEIGHT);
       ctx.fill();
-    }
+    };
 
     self.update = function(direction) {
       self.x += direction * self.speed;
-    }
+    };
 
-    self.isHit = function() {
+    self.isHit = function(bullets) {
+      for (var i = 0; i < bullets.length; i++) {
+        var bullet = bullets[i];
 
-    }
+        var deltX = Math.pow(bullet.x - (self.x + (Ship.WIDTH/2)), 2);
+        var deltY = Math.pow(bullet.y - (self.y + Ship.HEIGHT), 2);
+
+        d = Math.sqrt(deltX + deltY);
+
+        if (d < (Ship.HEIGHT)) {
+          bullets.splice(bullets.indexOf(bullet), 1);
+          return true;
+        }
+      }
+    };
 
     self.fire = function() {
-    }
+
+    };
 
   }
 
@@ -162,9 +175,10 @@ var SI = (function() {
     var firstAlien = aliens[0];
     var lastAlien = aliens[aliens.length - 1];
 
-    if ((lastAlien.x + Ship.WIDTH) >= Game.DIM.width) {
+
+    if (lastAlien != null && (lastAlien.x + Ship.WIDTH) >= Game.DIM.width) {
       return true;
-    } else if (firstAlien.x <= 0) {
+    } else if (firstAlien != null && firstAlien.x <= 0) {
       return true;
     }
 
@@ -175,10 +189,9 @@ var SI = (function() {
     var self = this;
 
     self.ship = new Ship(ctx, Ship.STARTING_POS);
-    // Will need to add alien bullets here, too
-    self.firedBullets = self.ship.firedBullets;
-    self.aliens = Alien.buildAlienRow(ctx, { x:60, y:60 });
-    self.alienDirection = 1;
+    self.shipBullets = self.ship.firedBullets;
+    self.aliens = Alien.buildAlienRow(ctx, { x:80, y:40 });
+    self.alienDirection = 2;
 
     self.start = function() {
       self.ship.keyBindings();
@@ -199,19 +212,19 @@ var SI = (function() {
         a.draw();
       }
 
-      for (var i = 0; i < self.firedBullets.length; i++) {
-        var b = self.firedBullets[i];
+      for (var i = 0; i < self.shipBullets.length; i++) {
+        var b = self.shipBullets[i];
         b.draw();
       }
     };
 
     self.update = function() {
-      for (var i = 0; i < self.firedBullets.length; i++) {
-        var b = self.firedBullets[i];
+      for (var i = 0; i < self.shipBullets.length; i++) {
+        var b = self.shipBullets[i];
         b.update();
 
         if (b.y < 0) {
-          self.firedBullets.splice(i, 1);
+          self.shipBullets.splice(i, 1);
         }
       }
 
@@ -227,8 +240,23 @@ var SI = (function() {
       for (var i = 0; i < self.aliens.length; i++) {
         var a = self.aliens[i];
         a.update(self.alienDirection);
+        if (a.isHit(self.shipBullets)) {
+          self.aliens.splice(i, 1);
+        }
       }
     };
+
+    // self.alienHit = function() {
+    //   for (var i = 0; i < self.aliens.length; i++) {
+    //     for (var j = 0; j < self.shipBullets.lenght; j++) {
+    //       if (self.aliens[i].isHit(self.shipBullets[j])) {
+    //         console.log("hit");
+    //         self.aliens.splice(i, 1);
+    //         self.shipBullets.splice(j, 1);
+    //       }
+    //     }
+    //   }
+    // };
 
   }
 
