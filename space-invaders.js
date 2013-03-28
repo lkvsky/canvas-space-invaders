@@ -1,5 +1,4 @@
 var SI = (function() {
-
   function Ship(ctx, pos) {
     var self = this;
 
@@ -82,7 +81,6 @@ var SI = (function() {
   Ship.HEIGHT = 20;
   Ship.GUNPOINT_OFFSET = 20;
 
-
   function Bullet(ctx, pos, vehicle) {
     var self = this;
 
@@ -120,7 +118,7 @@ var SI = (function() {
     self.draw = function() {
       ctx.beginPath();
       ctx.fillStyle = "#e6c200";
-      ctx.stroke
+      ctx.stroke();
 
       ctx.rect(self.x, self.y, Ship.WIDTH, Ship.HEIGHT);
       ctx.fill();
@@ -132,19 +130,12 @@ var SI = (function() {
 
     self.isHit = function(bullets) {
       for (var i = 0; i < bullets.length; i++) {
-        if (bullets[i].y <= (self.y + Ship.HEIGHT)
-            && (bullets[i])
-            && (bullets[i].x ) >= self.x
-            && bullets[i].x <= (self.x + Ship.WIDTH)) {
+        if (bullets[i].y <= (self.y + Ship.HEIGHT) && (bullets[i]) && (bullets[i].x ) >= self.x && bullets[i].x <= (self.x + Ship.WIDTH)) {
           return true;
         }
 
         return false;
-      };
-    };
-
-    self.fire = function() {
-
+      }
     };
 
   }
@@ -159,7 +150,7 @@ var SI = (function() {
       var pos = {
         x: (firstPosx * i),
         y: (firstPosy)
-      }
+      };
 
       var a = new Alien(ctx, pos);
       alienRow.push(a);
@@ -172,10 +163,9 @@ var SI = (function() {
     var firstAlien = aliens[0];
     var lastAlien = aliens[aliens.length - 1];
 
-
-    if (lastAlien != null && (lastAlien.x + Ship.WIDTH) >= Game.DIM.width) {
+    if (lastAlien !== null && (lastAlien.x + Ship.WIDTH) >= Game.DIM.width) {
       return true;
-    } else if (firstAlien != null && firstAlien.x <= 0) {
+    } else if (firstAlien !== null && firstAlien.x <= 0) {
       return true;
     }
 
@@ -192,7 +182,7 @@ var SI = (function() {
 
     self.start = function() {
       self.ship.keyBindings();
-      setInterval(self.gameLoop, 1000/24)
+      setInterval(self.gameLoop, 1000/24);
     };
 
     self.gameLoop = function() {
@@ -203,19 +193,25 @@ var SI = (function() {
 
     self.draw = function() {
       self.ship.draw();
-
+      // draw aliens
       for (var i = 0; i < self.aliens.length; i++) {
         var a = self.aliens[i];
         a.draw();
       }
-
-      for (var i = 0; i < self.shipBullets.length; i++) {
-        var b = self.shipBullets[i];
+      // draw bullets
+      for (var j = 0; j < self.shipBullets.length; j++) {
+        var b = self.shipBullets[j];
         b.draw();
       }
     };
 
     self.update = function() {
+      self.updateBullets();
+      self.updateAliens();
+    };
+
+    // canvas update helpers
+    self.updateBullets = function() {
       for (var i = 0; i < self.shipBullets.length; i++) {
         var b = self.shipBullets[i];
         b.update();
@@ -224,57 +220,37 @@ var SI = (function() {
           self.shipBullets.splice(i, 1);
         }
       }
+    };
 
+    self.updateAliens = function() {
       if (Alien.wallHit(self.aliens)) {
-        self.alienDirection *= -1
+        self.alienDirection *= -1;
 
-        for (var i = 0; i<self.aliens.length; i++){
+        for (var i = 0; i<self.aliens.length; i++) {
           var a = self.aliens[i];
           a.y += 20;
         }
       }
 
-      for (var i = 0; i < self.aliens.length; i++) {
-        var a = self.aliens[i];
+      for (var j = 0; j < self.aliens.length; j++) {
+        var a = self.aliens[j];
         a.update(self.alienDirection);
         if (a.isHit(self.shipBullets)) {
-          self.aliens.splice(i, 1);
+          self.aliens.splice(j, 1);
         }
       }
     };
-
-    // self.alienHit = function() {
-    //   for (var i = 0; i < self.aliens.length; i++) {
-    //     for (var j = 0; j < self.shipBullets.lenght; j++) {
-    //       if (self.aliens[i].isHit(self.shipBullets[j])) {
-    //         console.log("hit");
-    //         self.aliens.splice(i, 1);
-    //         self.shipBullets.splice(j, 1);
-    //       }
-    //     }
-    //   }
-    // };
-
   }
 
-  Game.DIM = { width: 900, height: 600 }
-  Ship.STARTING_POS = { x: (Game.DIM.width/2 - 20), y: Game.DIM.height -50 }
-
-  // Game class
-  // moves aliens from left to right
-  // Moves aliens closer once they get to some area of screen
-  // random alien randomly shoots
-  // array of fired bullets
-  // array of aliens
-  // game#draw
-  // game#update
+  Game.DIM = { width: 900, height: 600 };
+  Ship.STARTING_POS = { x: (Game.DIM.width/2 - 20), y: Game.DIM.height -50 };
 
   return {
     Ship: Ship,
     Bullet: Bullet,
     Alien: Alien,
     Game: Game
-  }
+  };
 
 })();
 
@@ -285,13 +261,6 @@ var SI = (function() {
   canvas.height = 600;
 
   var ctx = canvas.getContext("2d");
-  // var shipStartPos = { x: (DIM.width/2 - 20), y: DIM.height -50 }
-  var game = new SI.Game(ctx)
+  var game = new SI.Game(ctx);
   game.start();
-
-  // var ship = new SI.Ship(ctx, shipStartPos, DIM);
-  // ship.keyBindings();
-  // ship.draw();
-
-  // setInterval(ship.draw, 1000/24);
 })();
